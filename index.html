@@ -1,229 +1,303 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BandX — Бренд уличной одежды</title>
-  <style>
-    /* === Общий стиль === */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: "Poppins", sans-serif;
-      background-color: #0a0014;
-      color: white;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(35, 0, 66, 0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 50px;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    header img {
-      height: 60px;
-      filter: drop-shadow(0 0 10px #a64cff);
-      animation: pulse 3s infinite ease-in-out;
-    }
-
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-      transition: 0.3s;
-      position: relative;
-    }
-
-    nav a::after {
-      content: "";
-      position: absolute;
-      width: 0%;
-      height: 2px;
-      background: #a64cff;
-      bottom: -3px;
-      left: 0;
-      transition: 0.3s;
-    }
-
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    nav a:hover {
-      color: #a64cff;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        filter: drop-shadow(0 0 10px #a64cff);
-      }
-      50% {
-        filter: drop-shadow(0 0 20px #a64cff);
-      }
-    }
-
-    section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 20px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 4rem;
-      color: #a64cff;
-      text-shadow: 0 0 20px #a64cff;
-      margin-bottom: 20px;
-      animation: fadeIn 1.5s ease forwards;
-    }
-
-    p {
-      font-size: 1.2rem;
-      color: #d9caff;
-      max-width: 700px;
-      animation: fadeIn 2s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-      width: 90%;
-      margin-top: 40px;
-    }
-
-    .product {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 20px;
-      transition: 0.4s;
-      box-shadow: 0 0 10px rgba(166, 76, 255, 0.2);
-    }
-
-    .product:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 25px rgba(166, 76, 255, 0.6);
-    }
-
-    .product img {
-      width: 100%;
-      border-radius: 15px;
-      margin-bottom: 15px;
-    }
-
-    footer {
-      background: rgba(35, 0, 66, 0.9);
-      padding: 50px 20px;
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    footer p {
-      color: #b79aff;
-      margin-bottom: 5px;
-    }
-
-    footer a {
-      color: #a64cff;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* Кнопки */
-    .btn {
-      display: inline-block;
-      padding: 12px 30px;
-      background: #a64cff;
-      color: white;
-      border-radius: 30px;
-      margin-top: 25px;
-      text-decoration: none;
-      font-weight: bold;
-      letter-spacing: 1px;
-      box-shadow: 0 0 15px #a64cff;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #c383ff;
-      box-shadow: 0 0 25px #c383ff;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoosGames - Бесплатные игры без торрента</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .file-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .file-name {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .download-btn:hover {
+            background: linear-gradient(to right, #7a1fd1, #3a00c8);
+            transform: scale(1.03);
+        }
+        
+        .no-files {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 30px;
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .tumbleweed {
+            position: absolute;
+            bottom: 20px;
+            left: -100px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30px 30px, #f4d03f, #d68910);
+            border-radius: 50%;
+            animation: tumble 8s linear infinite;
+            box-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+        }
+        
+        .tumbleweed::before, .tumbleweed::after {
+            content: '';
+            position: absolute;
+            background: radial-gradient(circle at center, #f4d03f, #d68910);
+            border-radius: 50%;
+        }
+        
+        .tumbleweed::before {
+            width: 60px;
+            height: 60px;
+            top: -10px;
+            left: 10px;
+        }
+        
+        .tumbleweed::after {
+            width: 50px;
+            height: 50px;
+            bottom: -5px;
+            right: 10px;
+        }
+        
+        .no-files-text {
+            position: relative;
+            z-index: 2;
+            margin-top: 20px;
+        }
+        
+        @keyframes tumble {
+            0% {
+                transform: translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 200px)) rotate(720deg);
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tumbleweed {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .tumbleweed::before {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .tumbleweed::after {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <header>
-    <img src="https://images.unsplash.com/photo-1618354691373-2e6e7b2cf21e?auto=format&fit=crop&w=900&q=80" alt="BandX logo" />
-    <nav>
-      <a href="#home">Главная</a>
-      <a href="#products">Коллекция</a>
-      <a href="#about">О нас</a>
-      <a href="#contact">Контакты</a>
-    </nav>
-  </header>
-
-  <section id="home">
-    <h1>BandX</h1>
-    <p>BandX — бренд уличной одежды, созданный для подростков, которые живут в ритме улиц, музыки и самовыражения.</p>
-    <a href="#products" class="btn">Смотреть коллекцию</a>
-  </section>
-
-  <section id="products">
-    <h1>Наша коллекция</h1>
-    <div class="products">
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1618354691373-2e6e7b2cf21e?auto=format&fit=crop&w=900&q=80" alt="Hoodie BandX">
-        <p>Фиолетовый худи BandX — стиль, комфорт и уличная энергия в каждом стежке.</p>
-      </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="T-shirt BandX">
-        <p>Футболка BandX — легкость, свобода и граффити-душа бренда.</p>
-      </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1600180758890-6f9f34c86a83?auto=format&fit=crop&w=900&q=80" alt="Jacket BandX">
-        <p>Куртка BandX — уличный стиль с неоновым акцентом и свободой движений.</p>
-      </div>
+    <div class="container">
+        <header>
+            <h1>DoosGames</h1>
+            <p class="subtitle">Бесплатные игры без торрента</p>
+        </header>
+        
+        <main>
+            <div id="loading" class="loading">
+                Загрузка файлов из репозитория...
+            </div>
+            
+            <div id="files-container" class="files-grid" style="display: none;">
+                <!-- Файлы будут добавлены здесь динамически -->
+            </div>
+            
+            <div id="no-files" class="no-files" style="display: none;">
+                <div class="tumbleweed"></div>
+                <div class="no-files-text">Файлов пока нету...</div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>DoosGames &copy; 2025 | Бесплатные игры без торрента</p>
+        </footer>
     </div>
-  </section>
 
-  <section id="about">
-    <h1>О нас</h1>
-    <p>Мы — команда молодых дизайнеров, создающих одежду для тех, кто не боится выделяться. BandX — это не просто бренд, это стиль жизни, отражающий индивидуальность каждого.</p>
-  </section>
-
-  <section id="contact">
-    <h1>Контакты</h1>
-    <p>Почта: <a href="mailto:vodoleevich10@mail.ru">vodoleevich10@mail.ru</a></p>
-    <p>Телефон: <a href="tel:+79020571294">+7 (902) 057-1294</a></p>
-  </section>
-
-  <footer>
-    <p>© 2025 BandX. Все права защищены.</p>
-    <p>Создано с 💜 для подростков, живущих стилем.</p>
-  </footer>
-
+    <script>
+        // GitHub API URL для получения содержимого папки
+        const repoUrl = 'https://api.github.com/repos/MrTofYfY/website/contents/main';
+        
+        // Элементы DOM
+        const loadingElement = document.getElementById('loading');
+        const filesContainer = document.getElementById('files-container');
+        const noFilesElement = document.getElementById('no-files');
+        
+        // Функция для получения файлов из репозитория
+        async function fetchFiles() {
+            try {
+                const response = await fetch(repoUrl);
+                
+                if (!response.ok) {
+                    // В случае ошибки просто показываем анимацию перекатиполя
+                    loadingElement.style.display = 'none';
+                    noFilesElement.style.display = 'block';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                // Фильтруем только ZIP файлы
+                const zipFiles = data.filter(item => 
+                    item.type === 'file' && item.name.endsWith('.zip')
+                );
+                
+                // Скрываем индикатор загрузки
+                loadingElement.style.display = 'none';
+                
+                // Если есть ZIP файлы, отображаем их
+                if (zipFiles.length > 0) {
+                    displayFiles(zipFiles);
+                } else {
+                    // Если файлов нет, показываем сообщение с анимацией
+                    noFilesElement.style.display = 'block';
+                }
+                
+            } catch (error) {
+                // В случае ошибки просто показываем анимацию перекатиполя
+                console.error('Ошибка:', error);
+                loadingElement.style.display = 'none';
+                noFilesElement.style.display = 'block';
+            }
+        }
+        
+        // Функция для отображения файлов
+        function displayFiles(files) {
+            filesContainer.innerHTML = '';
+            
+            files.forEach(file => {
+                // Создаем название файла без расширения
+                const fileName = file.name.replace('.zip', '');
+                
+                // Создаем карточку файла
+                const fileCard = document.createElement('div');
+                fileCard.className = 'file-card';
+                
+                fileCard.innerHTML = `
+                    <div class="file-name">${fileName}</div>
+                    <a href="${file.download_url}" class="download-btn" download>
+                        Скачать игру
+                    </a>
+                `;
+                
+                filesContainer.appendChild(fileCard);
+            });
+            
+            filesContainer.style.display = 'grid';
+        }
+        
+        // Загружаем файлы при загрузке страницы
+        document.addEventListener('DOMContentLoaded', fetchFiles);
+    </script>
 </body>
 </html>
