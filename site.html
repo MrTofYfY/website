@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BandX — Бренд уличной одежды</title>
+  <style>
+    /* === Общий стиль === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #0a0014;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(35, 0, 66, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header img {
+      height: 60px;
+      filter: drop-shadow(0 0 10px #a64cff);
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: #a64cff;
+      bottom: -3px;
+      left: 0;
+      transition: 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #a64cff;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 10px #a64cff);
+      }
+      50% {
+        filter: drop-shadow(0 0 20px #a64cff);
+      }
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 4rem;
+      color: #a64cff;
+      text-shadow: 0 0 20px #a64cff;
+      margin-bottom: 20px;
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #d9caff;
+      max-width: 700px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      width: 90%;
+      margin-top: 40px;
+    }
+
+    .product {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 20px;
+      transition: 0.4s;
+      box-shadow: 0 0 10px rgba(166, 76, 255, 0.2);
+    }
+
+    .product:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 25px rgba(166, 76, 255, 0.6);
+    }
+
+    .product img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+
+    footer {
+      background: rgba(35, 0, 66, 0.9);
+      padding: 50px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    footer p {
+      color: #b79aff;
+      margin-bottom: 5px;
+    }
+
+    footer a {
+      color: #a64cff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Кнопки */
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #a64cff;
+      color: white;
+      border-radius: 30px;
+      margin-top: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 0 15px #a64cff;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #c383ff;
+      box-shadow: 0 0 25px #c383ff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://images.unsplash.com/photo-1618354691373-2e6e7b2cf21e?auto=format&fit=crop&w=900&q=80" alt="BandX logo" />
+    <nav>
+      <a href="#home">Главная</a>
+      <a href="#products">Коллекция</a>
+      <a href="#about">О нас</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <section id="home">
+    <h1>BandX</h1>
+    <p>BandX — бренд уличной одежды, созданный для подростков, которые живут в ритме улиц, музыки и самовыражения.</p>
+    <a href="#products" class="btn">Смотреть коллекцию</a>
+  </section>
+
+  <section id="products">
+    <h1>Наша коллекция</h1>
+    <div class="products">
+      <div class="product">
+        <img src="https://images.unsplash.com/photo-1618354691373-2e6e7b2cf21e?auto=format&fit=crop&w=900&q=80" alt="Hoodie BandX">
+        <p>Фиолетовый худи BandX — стиль, комфорт и уличная энергия в каждом стежке.</p>
+      </div>
+      <div class="product">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="T-shirt BandX">
+        <p>Футболка BandX — легкость, свобода и граффити-душа бренда.</p>
+      </div>
+      <div class="product">
+        <img src="https://images.unsplash.com/photo-1600180758890-6f9f34c86a83?auto=format&fit=crop&w=900&q=80" alt="Jacket BandX">
+        <p>Куртка BandX — уличный стиль с неоновым акцентом и свободой движений.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <h1>О нас</h1>
+    <p>Мы — команда молодых дизайнеров, создающих одежду для тех, кто не боится выделяться. BandX — это не просто бренд, это стиль жизни, отражающий индивидуальность каждого.</p>
+  </section>
+
+  <section id="contact">
+    <h1>Контакты</h1>
+    <p>Почта: <a href="mailto:vodoleevich10@mail.ru">vodoleevich10@mail.ru</a></p>
+    <p>Телефон: <a href="tel:+79020571294">+7 (902) 057-1294</a></p>
+  </section>
+
+  <footer>
+    <p>© 2025 BandX. Все права защищены.</p>
+    <p>Создано с 💜 для подростков, живущих стилем.</p>
+  </footer>
+
+</body>
+</html>
